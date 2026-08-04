@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}500. Ошибка сервера{% endblock title %}
+
+{% block content %}
+  <section class="container my-5 px-4">
+    <h1 class="text-center">500</h1>
+    <p class="text-center my-4">Ошибка сервера.</p>
+    <p class="text-center">
+      <a href="{{ url_for('index_view') }}">Вернуться на главную</a>
+    </p>
+  </section>
+{% endblock content %}

@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}Загрузка файлов - YaCut{% endblock title %}
+
+{% block content %}
+  <section class="container my-5 px-4">
+    <h1 class="text-center"><span style="color:red">Ya</span>Cut</h1>
+    <p class="text-center my-4">
+      Загрузите файлы и получите на них короткие ссылки
+    </p>
+
+    <div class="container">
+      <div class="row my-3">
+        <div class="col-sm">
+        </div>
+        <div class="col-sm">
+          <form method="post" enctype="multipart/form-data">
+            {{ form.hidden_tag() }}
+            {{ form.files(class="form-control form-control-lg py-2 mb-3") }}
+
+            {% for error in form.files.errors %}
+              <p><span style="color:red">{{ error }}</span></p>
+            {% endfor %}
+
+            {{ form.submit(class="btn btn-primary") }}
+          </form>
+        </div>
+        <div class="col-sm">
+        </div>
+      </div>
+    </div>
+
+    {% if file_links %}
+      <div class="container mt-5">
+        <div class="row">
+          <div class="col-sm">
+          </div>
+          <div class="col-sm-6">
+            <table class="table">
+              <tbody>
+                {% for file_link in file_links %}
+                  <tr>
+                    <td>{{ file_link.filename }}</td>
+                    <td>
+                      <a href="{{ file_link.short_link }}">{{ file_link.short_link }}</a>
+                    </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          <div class="col-sm">
+          </div>
+        </div>
+      </div>
+    {% endif %}
+  </section>
+{% endblock content %}
