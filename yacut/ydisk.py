@@ -29,7 +29,7 @@ async def async_upload_files_to_ydisk(files):
 
 async def upload_file_and_get_url(session, file):
     params = {
-        'path': 'app:/' + {file.filename},
+        'path': 'app:/' + file.filename,
         'overwrite': 'True'
     }
     async with session.get(
