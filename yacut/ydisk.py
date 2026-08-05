@@ -14,6 +14,7 @@ DOWNLOAD_LINK_URL = f'{API_HOST}{API_VERSION}/disk/resources/download'
 
 
 async def async_upload_files_to_ydisk(files):
+    """Асинхронно загрузить файлы на Яндекс Диск."""
     if files is not None:
         tasks = []
         async with aiohttp.ClientSession() as session:
@@ -28,6 +29,7 @@ async def async_upload_files_to_ydisk(files):
 
 
 async def upload_file_and_get_url(session, file):
+    """Загрузить файл на Яндекс Диск и вернуть ссылку на скачивание."""
     params = {
         'path': 'app:/' + file.filename,
         'overwrite': 'True'
