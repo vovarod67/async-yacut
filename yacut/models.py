@@ -26,9 +26,17 @@ class URLMap(db.Model):
     timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
 
     @staticmethod
-    def get(short_id):
-        """Получение объекта URLMap по короткому идентификатору"""
+    def get_by_short_id(short_id):
+        """Получение объекта URLMap по короткому идентификатору."""
         return URLMap.query.filter_by(short=short_id).first()
+
+    @classmethod
+    def is_short_id_unavailable(cls, short_id):
+        """Проверка занятости или запрещённости короткого идентификатора."""
+        return (
+            short_id in RESERVED_SHORT_IDS
+            or cls.get_by_short_id(short_id) is not None
+        )
 
     @classmethod
     def get_unique_short_id(cls, length=SHORT_ID_LENGTH):
@@ -36,7 +44,7 @@ class URLMap(db.Model):
         short_id = ''.join(
             choice(VALID_SYMBOLS) for _ in range(length)
         )
-        if (short_id in RESERVED_SHORT_IDS or cls.get(short_id) is not None):
+        if cls.is_short_id_unavailable(short_id):
             return cls.get_unique_short_id(length)
         return short_id
 
@@ -45,10 +53,7 @@ class URLMap(db.Model):
         """Создание и сохранение объекта URLMap."""
         if not custom_id:
             custom_id = URLMap.get_unique_short_id()
-        elif (
-            custom_id in RESERVED_SHORT_IDS
-            or URLMap.get(custom_id) is not None
-        ):
+        elif URLMap.is_short_id_unavailable(custom_id):
             raise ShortIDAlreadyExistsError(
                 'Предложенный вариант короткой ссылки уже существует.'
             )

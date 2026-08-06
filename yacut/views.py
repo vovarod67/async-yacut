@@ -1,10 +1,11 @@
-from flask import flash, redirect, render_template, url_for
+from flask import flash, redirect, render_template
 
 from . import app
 from .models import URLMap
 from .forms import URLMapForm, FileForm
 from .ydisk import async_upload_files_to_ydisk
 from .exceptions import ShortIDAlreadyExistsError
+from .constants import FILES_PREFIX
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -24,15 +25,11 @@ def index_view():
     return render_template(
         'index.html',
         form=form,
-        short_link=url_for(
-            'redirect_view',
-            short_id=url_map.short,
-            _external=True
-        )
+        short_link=url_map.to_dict()['short_link']
     )
 
 
-@app.route('/files', methods=['GET', 'POST'])
+@app.route(f'/{FILES_PREFIX}', methods=['GET', 'POST'])
 async def files_view():
     """Загрузка файлов на Яндекс Диск и создание коротких ссылок."""
     form = FileForm()
@@ -45,11 +42,7 @@ async def files_view():
         file_links.append(
             {
                 'filename': filename,
-                'short_link': url_for(
-                    'redirect_view',
-                    short_id=url_map.short,
-                    _external=True
-                )
+                'short_link': url_map.to_dict()['short_link']
             }
         )
     return render_template(

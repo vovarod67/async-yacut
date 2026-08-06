@@ -45,7 +45,7 @@ def create_short_link():
 @app.route('/api/id/<string:short_id>/', methods=['GET'])
 def get_original_link(short_id):
     """Получение первоначальной ссылки по короткому идентификатору."""
-    url_map = URLMap.get(short_id)
+    url_map = URLMap.get_by_short_id(short_id)
     if url_map is None:
         raise InvalidAPIUsage('Указанный id не найден', HTTPStatus.NOT_FOUND)
     return jsonify({'url': url_map.to_dict()['url']}), HTTPStatus.OK
